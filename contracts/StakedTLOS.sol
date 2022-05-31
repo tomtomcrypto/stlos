@@ -11,6 +11,12 @@ interface IWTLOS {
     function deposit() external payable;
     function transfer(address to, uint value) external returns (bool);
     function withdraw(uint) external;
+    function balanceOf(address) external returns (uint);
+}
+
+interface ITelosEscrow {
+    function deposit(address) payable external;
+    function withdraw(uint) external;
 }
 
 contract StakedTLOS is ERC20, IERC4626 {
@@ -18,8 +24,13 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     IERC20Metadata private immutable _asset;
 
-    constructor(IERC20Metadata asset_) ERC20("Staked TLOS", "STLOS") {
+    ITelosEscrow private _escrow;
+
+    constructor(IERC20Metadata asset_, ITelosEscrow escrow_) ERC20("Staked TLOS", "STLOS") {
+        require(Address.isContract(address(asset_)), 'constructor: asset be a valid contract');
+        require(Address.isContract(address(escrow_)), 'constructor: escrow be a valid contract');
         _asset = asset_;
+        _escrow = escrow_;
     }
 
     /** @dev See {IERC4262-asset} */
@@ -80,6 +91,13 @@ contract StakedTLOS is ERC20, IERC4626 {
     /** @dev See {IERC4262-previewRedeem} */
     function previewRedeem(uint256 shares) public view virtual override returns (uint256) {
         return _convertToAssets(shares, Math.Rounding.Down);
+    }
+
+    function _unwrap(uint amount) internal {
+        uint256 myBalance = IWTLOS(asset()).balanceOf(address(this));
+        if (amount <= myBalance) {
+            IWTLOS(asset()).withdraw(amount);
+        }
     }
 
     function _wrap() internal {
@@ -164,29 +182,9 @@ contract StakedTLOS is ERC20, IERC4626 {
         // if _asset is ERC777, transfer can call reenter AFTER the transfer happens through
         // the tokensReceived hook, so we need to transfer after we burn to keep the invariants.
         _burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
 
-        emit Withdraw(caller, receiver, owner, assets, shares);
-
-        return shares;
-    }
-
-    function withdrawTLOS(
-        uint256 assets,
-        address payable receiver,
-        address owner
-    ) public returns (uint256) {
-        _wrap();
-        require(assets > 0, "ERC4626: assets to withdraw is zero");
-        require(assets <= maxWithdraw(owner), "ERC4626: withdraw more then max");
-
-        address caller = _msgSender();
-        uint256 shares = previewWithdraw(assets);
-
-        IWTLOS(asset()).withdraw(assets);
-        receiver.transfer(assets);
-
-        _burn(owner, shares);
+        _unwrap(assets);
+        _escrow.deposit{value: assets}(address(receiver));
 
         emit Withdraw(caller, receiver, owner, assets, shares);
 
@@ -212,7 +210,10 @@ contract StakedTLOS is ERC20, IERC4626 {
         // if _asset is ERC777, transfer can call reenter AFTER the transfer happens through
         // the tokensReceived hook, so we need to transfer after we burn to keep the invariants.
         _burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
+
+        _unwrap(assets);
+
+        _escrow.deposit{value: assets}(receiver);
 
         emit Withdraw(caller, receiver, owner, assets, shares);
 
@@ -242,5 +243,12 @@ contract StakedTLOS is ERC20, IERC4626 {
             (supply == 0)
                 ? shares.mulDiv(10**_asset.decimals(), 10**decimals(), direction)
                 : shares.mulDiv(totalAssets(), supply, direction);
+    }
+
+    /**
+     * @dev Fallback payable function to make sure any received TLOS (base currency) is wrapped to WTLOS (to help read total balance)
+     */
+    fallback() external payable  {
+        _wrap();
     }
 }

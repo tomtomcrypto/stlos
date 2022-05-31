@@ -4,7 +4,6 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
-const WTLOS = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9";
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -15,21 +14,18 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const StakedTLOS = await hre.ethers.getContractFactory("StakedTLOS");
-  const TelosEscrow = await hre.ethers.getContractFactory("TelosEscrow");
+  const contract = await hre.ethers.getContractFactory("StakedTLOS");
+  const sTLOS = await contract.deploy('0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9', "0x225C99704a1265086b002941882D833bBEF6F376");
 
-  const escrow = await TelosEscrow.deploy("TelosEscrow", "0x96BD1297e1Ce8f8832c4AAD6C97E31c59b505999", 200, 3600);
-  await escrow.deployed();
-  const stlos = await StakedTLOS.deploy(WTLOS, escrow.address);
-  await stlos.deployed();
-
-  console.log("Escrow deployed to:", escrow.address);
-  console.log("STLOS deployed to:", stlos.address);
+  await sTLOS.deployed();
+  console.log("sTLOS deployed to:", sTLOS.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
