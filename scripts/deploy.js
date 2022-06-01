@@ -18,7 +18,7 @@ async function main() {
   const StakedTLOS = await hre.ethers.getContractFactory("StakedTLOS");
   const TelosEscrow = await hre.ethers.getContractFactory("TelosEscrow");
 
-  const escrow = await TelosEscrow.deploy("TelosEscrow", "0x96BD1297e1Ce8f8832c4AAD6C97E31c59b505999", 200, 3600);
+  const escrow = await TelosEscrow.deploy("0xc51fE232a0153F1F44572369Cefe7b90f2BA08a5", 200, 600); // Governance address, max locked tokens structs per address, lock duration
   await escrow.deployed();
   const stlos = await StakedTLOS.deploy(WTLOS, escrow.address);
   await stlos.deployed();

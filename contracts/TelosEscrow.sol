@@ -17,10 +17,8 @@ contract TelosEscrow is Ownable {
     uint public lockDuration;
     uint public maxDeposits;
     address public authorizedGovernanceAddress;
-    string public name;
 
-    constructor(string memory _name, address _authorizedGovernanceAddress, uint _maxDeposits, uint _lockDuration) {
-        name = _name;
+    constructor(address _authorizedGovernanceAddress, uint _maxDeposits, uint _lockDuration) {
         lockDuration = _lockDuration;
         maxDeposits = _maxDeposits;
         authorizedGovernanceAddress = _authorizedGovernanceAddress;
@@ -66,7 +64,7 @@ contract TelosEscrow is Ownable {
     function maxWithdraw(address depositor) external view returns (uint) {
         uint unlocked = 0;
         lockedTokens[] memory tokens = deposits[depositor];
-        for (uint i=0; i<tokens.length; i++) {
+        for (uint i=0; i < tokens.length; i++) {
             unlocked = (tokens[i].until > block.timestamp) ? unlocked : unlocked + tokens[i].amount;
         }
         return unlocked;

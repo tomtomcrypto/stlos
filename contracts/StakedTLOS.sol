@@ -101,10 +101,9 @@ contract StakedTLOS is ERC20, IERC4626 {
     }
 
     function _wrap() internal {
-        uint256 myBalance = address(this).balance;
-        // Don't wrap value from this transaction... just wrap if we had leftover yield not already wrapped
-        if ((myBalance - msg.value) > 0) {
-            IWTLOS(asset()).deposit{value: myBalance}();
+        uint256 myBalance = address(this).balance - msg.value;
+        if (myBalance > 0) {
+            IWTLOS(asset()).deposit{value: myBalance }();
         }
     }
 
@@ -243,12 +242,5 @@ contract StakedTLOS is ERC20, IERC4626 {
             (supply == 0)
                 ? shares.mulDiv(10**_asset.decimals(), 10**decimals(), direction)
                 : shares.mulDiv(totalAssets(), supply, direction);
-    }
-
-    /**
-     * @dev Fallback payable function to make sure any received TLOS (base currency) is wrapped to WTLOS (to help read total balance)
-     */
-    fallback() external payable  {
-        _wrap();
     }
 }
