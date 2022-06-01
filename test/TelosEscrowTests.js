@@ -17,15 +17,11 @@ describe("TelosEscrow", function () {
     const [_owner, addr1, addr2] = await ethers.getSigners();
     owner = _owner;
     authorized_address = addr2.address;
-    contract = await contractFactory.deploy("TelosEscrow", authorized_address, MAX_DEPOSIT, LOCK_DURATION);
+    contract = await contractFactory.deploy(authorized_address, MAX_DEPOSIT, LOCK_DURATION);
     let res = await contract.deployed();
   })
 
   describe("Correct setup", () => {
-    it("Should be named 'TelosEscrow'", async () => {
-      const name = await contract.name();
-      expect(name).to.equal("TelosEscrow");
-    });
     it("Should have the authorized address to change settings", async () => {
       const address = await contract.authorizedGovernanceAddress();
       expect(address).to.equal(authorized_address);
