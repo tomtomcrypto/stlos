@@ -16,10 +16,10 @@ All tests can be found inside the `test` folder
 Use `npx hardhat test` to run the tests
 
 ### Deploy
-Use `npx hardhat deploy --network testnet`
+`npx hardhat deploy --network testnet`
 
 ### Verify
-Use `npx hardhat sourcify  --network testnet` to verify the smart contracts using Sourcify
+`npx hardhat sourcify  --network testnet`
 
 
 ## Staked TLOS
