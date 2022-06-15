@@ -10,6 +10,8 @@ This repository requires NodeJS 14+ installed
 
 ### Install
 
+`npm install`
+
 ### Test
 
 `npx hardhat test`
