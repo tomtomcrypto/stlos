@@ -36,13 +36,13 @@ Returns the maximum number of deposits
 Returns the total TLOS balance of a depositor (locked & unlocked)
 
 `maxWithdraw(address depositor): uint256 `
-Returns the maximum TLOS withdraw of an address
+Returns the maximum TLOS withdraw of a depositor
 
 `depositsOf(address depositor): []`
-Returns the deposits of an address
+Returns the deposits of a depositor
 
 `deposit(address depositor): uint256 `
-Wraps TLOS deposited to WTLOS and convert to sTLOS.
+Deposits TLOS for depositor.
 
 `withdraw(): uint256 `
-Converts the sTLOS to TLOS and sends it to Escrow
+Withdraw all unlocked TLOS
