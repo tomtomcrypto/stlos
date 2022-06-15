@@ -50,7 +50,7 @@ Withdraw all unlocked TLOS
 ### Events
 
 `Withdraw(address _from, address _to, uint _amount)`
-Emitted on call to withdraw()
+Emitted on call to `withdraw()`
 
 `Deposit(address _from, address _depositor, uint _amount)`
-Emitted on call to deposit()
+Emitted on call to deposit(address depositor)
