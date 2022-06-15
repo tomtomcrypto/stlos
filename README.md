@@ -1,4 +1,4 @@
-# Stacked TLOS Contract (EVM)
+# Telos EVM Staking Contracts
 
 This repository includes two smart contracts that make up the backend of the TLOS staking functionality on Telos EVM.
 
