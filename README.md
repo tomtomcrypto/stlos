@@ -2,6 +2,21 @@
 
 This repository includes two smart contracts that make up the backend of the TLOS staking functionality on Telos EVM.
 
+## Requirements
+
+This repository requires NodeJS 14+ installed
+
+## Install
+
+## Test
+
+All tests can be found inside the `test` folder
+Use `npx hardhat test` to run the tests
+
+## Deploy
+
+## Verify
+
 ## Staked TLOS
 
 The Staked TLOS contract implements ....
