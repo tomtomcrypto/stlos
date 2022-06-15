@@ -23,7 +23,7 @@ The Telos Escrow contract locks token on deposit for a configurable amount of ti
 ### Rundown
 
 - TLOS is deposited in the contract and gets locked for  `lockDuration` amount of time
-- Once unlocked, depositor can withdraw the TLOS to their account
+- Once unlocked, depositors can withdraw the TLOS to their account
 
 ### Public functions
 
