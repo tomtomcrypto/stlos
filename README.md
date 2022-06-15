@@ -25,6 +25,7 @@ The Telos Escrow contract locks token on deposit for a configurable amount of ti
 ### Public functions
 
 `lockDuration(): uint256 `
+
 Returns the lock duration
 
 `maxDeposits(): uint256 `
@@ -32,24 +33,31 @@ Returns the lock duration
 Returns the maximum number of deposits
 
 `balanceOf(address depositor): uint256 `
+
 Returns the total TLOS balance of a depositor (locked & unlocked)
 
 `maxWithdraw(address depositor): uint256 `
+
 Returns the current maximum TLOS withdraw (unlocked tokens) for a depositor
 
 `depositsOf(address depositor): []`
+
 Returns the deposits `{uint256 amount, uint256 until }` of a depositor
 
 `deposit(address depositor): uint256 `
+
 Deposits TLOS for depositor.
 
 `withdraw(): uint256 `
+
 Withdraw all unlocked TLOS
 
 ### Events
 
 `Withdraw(address _from, address _to, uint _amount)`
+
 Emitted on sucessfull call to `withdraw()`
 
 `Deposit(address _from, address _depositor, uint _amount)`
+
 Emitted on sucessfull call to `deposit(address depositor)`
