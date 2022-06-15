@@ -6,16 +6,18 @@ This repository includes two smart contracts that make up the backend of the TLO
 
 This repository requires NodeJS 14+ installed
 
-## Install
+## Usage
 
-## Test
+### Install
+
+### Test
 
 All tests can be found inside the `test` folder
 Use `npx hardhat test` to run the tests
 
-## Deploy
+### Deploy
 
-## Verify
+### Verify
 
 ## Staked TLOS
 
