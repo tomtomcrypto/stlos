@@ -53,4 +53,4 @@ Withdraw all unlocked TLOS
 Emitted on call to `withdraw()`
 
 `Deposit(address _from, address _depositor, uint _amount)`
-Emitted on call to deposit(address depositor)
+Emitted on call to `deposit(address depositor)`
