@@ -22,15 +22,13 @@ The Telos Escrow contract locks token on deposit for a configurable amount of ti
 
 ### Rundown
 
-### Public variables
+### Public functions
 
 `lockDuration(): uint256 `
 Returns the lock duration
 
 `maxDeposits(): uint256 `
 Returns the maximum number of deposits
-
-### Public functions
 
 `balanceOf(address depositor): uint256 `
 Returns the total TLOS balance of a depositor (locked & unlocked)
