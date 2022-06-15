@@ -13,6 +13,7 @@ This repository requires NodeJS 14+ installed
 ### Test
 
 All tests can be found inside the `test` folder
+
 Use `npx hardhat test` to run the tests
 
 ### Deploy
