@@ -19,6 +19,7 @@ Use `npx hardhat test` to run the tests
 
 ### Verify
 
+
 ## Staked TLOS
 
 The Staked TLOS contract implements ....
@@ -32,6 +33,7 @@ The Staked TLOS contract implements ....
 ### Public variables
 
 ### Public functions
+
 
 ## Telos Escrow
 
