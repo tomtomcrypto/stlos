@@ -16,31 +16,19 @@ contract TelosEscrow is Ownable {
     mapping(address => lockedTokens[]) internal deposits;
     uint public lockDuration;
     uint public maxDeposits;
-    address public authorizedGovernanceAddress;
 
-    constructor(address _authorizedGovernanceAddress, uint _maxDeposits, uint _lockDuration) {
+    constructor(uint _maxDeposits, uint _lockDuration) {
         lockDuration = _lockDuration;
         maxDeposits = _maxDeposits;
-        authorizedGovernanceAddress = _authorizedGovernanceAddress;
     }
 
-    modifier isAuthorizedGovernanceAddress(){
-        require(msg.sender == authorizedGovernanceAddress, "Must be authorized to change settings");
-        _;
-    }
-
-    /** Set maximum deposits per address, authorized address only */
-    function setMaxDeposits(uint _maxDeposits) external isAuthorizedGovernanceAddress {
+    /** Set maximum deposits per address, owner only */
+    function setMaxDeposits(uint _maxDeposits) external onlyOwner {
         maxDeposits = _maxDeposits;
     }
 
-    /** Set address authorized to change settings */
-    function setAuthorizedGovernanceAddress(address _authorizedGovernanceAddress) external isAuthorizedGovernanceAddress {
-        authorizedGovernanceAddress = _authorizedGovernanceAddress;
-    }
-
-    /** Set the lock duration, authorized address only */
-    function setLockDuration(uint _lockDuration) external isAuthorizedGovernanceAddress {
+    /** Set the lock duration, owner only */
+    function setLockDuration(uint _lockDuration) external onlyOwner {
         lockDuration = _lockDuration;
     }
 

@@ -9,23 +9,18 @@ const TWO_TLOS = ethers.utils.parseEther("2.0");
 describe("TelosEscrow", function () {
   let contract;
   let contractFactory;
-  let authorized_address;
-  let owner;
+  let owner, addr1;
 
   beforeEach(async () => {
     contractFactory = await ethers.getContractFactory("TelosEscrow");
-    const [_owner, addr1, addr2] = await ethers.getSigners();
+    const [_owner, _addr1] = await ethers.getSigners();
     owner = _owner;
-    authorized_address = addr2.address;
-    contract = await contractFactory.deploy(authorized_address, MAX_DEPOSIT, LOCK_DURATION);
+    addr1 = _addr1;
+    contract = await contractFactory.deploy(MAX_DEPOSIT, LOCK_DURATION);
     let res = await contract.deployed();
   })
 
   describe("Correct setup", () => {
-    it("Should have the authorized address to change settings", async () => {
-      const address = await contract.authorizedGovernanceAddress();
-      expect(address).to.equal(authorized_address);
-    });
     it("Should have the "+ MAX_DEPOSIT +" max deposits", async () => {
       const max = await contract.maxDeposits();
       expect(max).to.equal(MAX_DEPOSIT);
@@ -34,34 +29,34 @@ describe("TelosEscrow", function () {
       const duration = await contract.lockDuration();
       expect(duration).to.equal(LOCK_DURATION);
     });
+
+    it("Should return the owner", async function () {
+      expect(await contract.owner()).to.equal(owner.address);
+    });
+
   });
 
   describe("Settings", function () {
-
-    it("Should return the new authorized contract for settings modification once changed", async function () {
-      const [owner, addr1, addr2] = await ethers.getSigners();
-      await contract.connect(addr2).setAuthorizedGovernanceAddress(addr1.address);
-      const _authorizedAddress = await contract.authorizedGovernanceAddress();
-      expect(_authorizedAddress).to.equal(addr1.address)
-    });
-
     it("Should return the new max deposits, "+(MAX_DEPOSIT * 2)+", once changed", async function () {
-      const [owner, addr1, addr2] = await ethers.getSigners();
-      await contract.connect(addr2).setMaxDeposits(MAX_DEPOSIT * 2);
+      await contract.connect(owner).setMaxDeposits(MAX_DEPOSIT * 2);
       expect(await contract.maxDeposits()).to.equal(MAX_DEPOSIT * 2);
     });
 
     it("Should return the new lock duration, "+(LOCK_DURATION * 2)+"s, once changed", async function () {
-      const [owner, addr1, addr2] = await ethers.getSigners();
-      await contract.connect(addr2).setLockDuration(LOCK_DURATION * 2);
+      await contract.connect(owner).setLockDuration(LOCK_DURATION * 2);
       expect(await contract.lockDuration()).to.equal(LOCK_DURATION * 2);
     });
     it("Shouldn't let unauthorized addresses change settings", async function () {
       const [owner, addr1] = await ethers.getSigners();
       await expect(contract.connect(addr1).setMaxDeposits(MAX_DEPOSIT * 2 )).to.be.reverted;
       await expect(contract.connect(addr1).setLockDuration(LOCK_DURATION * 2)).to.be.reverted;
-      await expect(contract.connect(addr1).setAuthorizedGovernanceAddress(addr1)).to.be.reverted;
     });
+
+    it("Should let the owner transfer ownership", async function () {
+      await expect(contract.connect(owner).transferOwnership(addr1.address)).to.not.be.reverted;
+      expect(await contract.owner()).to.equal(addr1.address);
+    });
+
   })
   describe("Core", function () {
     it("Shouldn't be able to deposit 0 tokens", async function () {

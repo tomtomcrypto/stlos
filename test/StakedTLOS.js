@@ -7,7 +7,7 @@ describe("StakedTLOS", function () {
     WTLOS = await ethers.getContractFactory("WTLOS");
     wtlos = await WTLOS.deploy();
     EscrowTLOS = await ethers.getContractFactory("TelosEscrow");
-    escrow = await EscrowTLOS.deploy("0xe7209d65c5BB05Ddf799b20fF0EC09E691FC3f11", 25, 60);
+    escrow = await EscrowTLOS.deploy(25, 60);
     StakedTLOS = await ethers.getContractFactory("StakedTLOS");
     stlos = await StakedTLOS.deploy(wtlos.address, escrow.address);
   })
