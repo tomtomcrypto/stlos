@@ -39,7 +39,7 @@ Returns the total TLOS balance of a depositor (locked & unlocked)
 Returns the current maximum TLOS withdraw (unlocked tokens) for a depositor
 
 `depositsOf(address depositor): []`
-Returns the deposits of a depositor
+Returns the deposits `{uint256 amount, uint256 until }` of a depositor
 
 `deposit(address depositor): uint256 `
 Deposits TLOS for depositor.
