@@ -25,7 +25,7 @@ This repository requires NodeJS 14+ installed
 
 ## Staked TLOS
 
-The Staked TLOS contract implements ....
+The Staked TLOS contract implements the IERC4262 tokenized vault standard
 
 ### Rundown
 
