@@ -37,6 +37,33 @@ The Staked TLOS contract implements ....
 
 ### Public functions
 
+`totalAssets(): uint256  `
+
+Returns the total TLOS + WTLOS balance of the contract
+
+`function convertToShares(uint256 assets): uint256`
+
+Converts assets to shares
+
+`function convertToAssets(uint256 shares): uint256`
+
+Converts shares to assets
+
+`function maxDeposit(address): uint256`
+
+Returns the max total deposit amount per address
+
+`function maxMint(address): uint256` 
+
+Returns the max mint amount per address
+
+`function depositTLOS(): uint256`
+
+Deposit TLOS to the contract
+
+`function withdraw(uint256 assets,  address receiver, address owner)`
+
+Withdraw assets to Telos Escrow contract
 
 ## Telos Escrow
 
