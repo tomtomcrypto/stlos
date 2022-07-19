@@ -57,6 +57,10 @@ Returns the max total deposit amount per address
 
 Returns the max mint amount per address
 
+`function maxWithdraw(address owner): uint256`
+
+Returns the max withdraw amount for an address
+
 `function depositTLOS(): uint256`
 
 Deposit TLOS to the contract
