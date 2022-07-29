@@ -43,11 +43,19 @@ Returns the total TLOS + WTLOS balance of the contract
 
 `function previewDeposit(uint256 assets):uint256`
 
-Preview shares returned on deposit of asset
+Preview shares returned on deposit of asset (rounded down)
 
 `function previewMint(uint256 shares): uint256`
 
-Preview assets value underlying the shares
+Preview assets value underlying the shares (rounded up)
+
+`function previewRedeem(uint256 shares):uint256`
+
+Preview assets returned on redeeming of shares (rounded down)
+
+`function previewWithdraw(uint256 assets): uint256`
+
+Preview the shares to withdraw from balance to withdraw assets (rounded up)
 
 `function convertToShares(uint256 assets): uint256`
 
