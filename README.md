@@ -41,6 +41,14 @@ The Staked TLOS contract implements the IERC4262 tokenized vault standard
 
 Returns the total TLOS + WTLOS balance of the contract
 
+`function previewDeposit(uint256 assets):uint256`
+
+Preview shares returned on deposit of asset
+
+`function previewMint(uint256 shares): uint256`
+
+Preview assets value underlying the shares
+
 `function convertToShares(uint256 assets): uint256`
 
 Converts assets to shares
