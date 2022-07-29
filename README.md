@@ -33,8 +33,6 @@ The Staked TLOS contract implements the IERC4262 tokenized vault standard
 - The value of those sTLOS shares changes according to the balance of TLOS in the contract
 - On withdraw, sTLOS is converted to TLOS and sent to the Escrow Contract
 
-### Public variables
-
 ### Public functions
 
 `totalAssets(): uint256  `
