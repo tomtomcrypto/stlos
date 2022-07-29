@@ -71,6 +71,10 @@ Returns the max total deposit amount per address
 
 Returns the max mint amount per address
 
+`function balanceOf(address owner): uint256`
+
+Returns the share balance of an address
+
 `function maxWithdraw(address owner): uint256`
 
 Returns the max withdraw amount for an address
