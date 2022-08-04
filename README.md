@@ -30,6 +30,9 @@ _Remember to save the contracts addresses, we'll need them to configure the Nati
 
 `npx hardhat sourcify  --network testnet`
 
+_Gateway timeouts are normal, the contract should still get verified, check using a block explorer or try to run the command again_
+
+
 #### Transfer Ownership
 
 After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration of the `lockDuration` and `maxDeposits` variables.
