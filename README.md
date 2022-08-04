@@ -21,12 +21,13 @@ To deploy the staking system you first need to deploy sTLOS and TelosEscrow on T
 `npx hardhat test`
 
 #### Deploy
-```
-npx hardhat deploy --network testnet
-```
+
+`npx hardhat deploy --network testnet`
+
 _Remember to save the contract's addresses_
 
 #### Verify
+
 `npx hardhat sourcify  --network testnet`
 
 After that you should transfer ownership of those contracts to the multisig linked EVM account for configuration of the `lockDuration` and `maxDeposits` variables.
