@@ -50,11 +50,29 @@ The configuration can be done using the following actions:
   -  storage_key is the computed storage key for the STLOS contract WTLOS balance
   -  wtlos_index is the index of WTLOS in the eosio.evm accounts table
 
-#### Get the storage key
-
 #### Get the WTLOS index
 
-#### Transfer Ownership
+The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x)
+
+#### Get the storage key
+
+The storage key we are looking for is part of the address => uint balance mapping of WTLOS. We need to access the mapping value for the STLOS address in order to retreive its WTLOS balance.
+
+To compute that storage key, you can use the following snippet:
+
+```
+    const provider = ethers.getDefaultProvider("https://testnet.telos.net/evm");
+
+    const wtlos = "0x10b95d422f2c9714c331b1a14829886b0910f55d"; // WTLOS address on testnet
+    const stlos = "0x10b95d422f2c9714c331b1a14829886b0910f55d"; // WTLOS address on testnet
+
+    // Get the stlos balance slot aka our storage key
+    const stlos_balance_slot = ethers.utils.keccak256(
+        ethers.utils.hexZeroPad("0x02", 32),
+        ethers.utils.hexZeroPad(stlos, 32),
+    );
+    console.log("Storage key:", stlos_balance_slot);
+```
 
 ## EVM Contracts
 
