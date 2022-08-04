@@ -66,8 +66,8 @@ To compute that storage key, you can use the following snippet that uses the eth
 ```
     const provider = ethers.getDefaultProvider("https://testnet.telos.net/evm");
 
-    const wtlos = "0x10b95d422f2c9714c331b1a14829886b0910f55d"; // WTLOS address on testnet
-    const stlos = "0x10b95d422f2c9714c331b1a14829886b0910f55d"; // WTLOS address on testnet
+    const wtlos = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS address on testnet
+    const stlos = "YOUR_STLOS_CONTRACT_ADDRESS"; // StakedTLOS address on testnet
 
     // Get the stlos balance slot aka our storage key
     const stlos_balance_slot = ethers.utils.keccak256(
