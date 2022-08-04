@@ -31,7 +31,7 @@ Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native
 
 ### exrsrv.tf
 
-Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the exrsrv.tf contract that distributes the staking rewards.
+Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the exrsrv.tf contract on Telos Native that distributes the staking rewards.
 The configuration can be done using the '' action
 That ratio is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10% (Normal reward * .90)
 
