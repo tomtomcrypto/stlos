@@ -6,34 +6,48 @@ This repository includes two smart contracts that make up the backend of the TLO
 
 This repository requires NodeJS 14+ installed
 
-## Usage
+## Deployment
 
-### Install
+To deploy the staking system you first need to deploy sTLOS and TelosEscrow on Telos EVM
+
+### sTLOS & TelosEscrow
+
+#### Install dependencies
 
 `npm install`
 
-### Test
+#### Test
 
 `npx hardhat test`
 
-### Deploy
+#### Deploy
 `npx hardhat deploy --network testnet`
 
-### Verify
+#### Verify
 `npx hardhat sourcify  --network testnet`
 
+After that you should transfer ownership of those contracts to the multisig linked EVM account for configuration of the `lockDuration` and `maxDeposits` variables.
+Follow our repository for an example of how to propose a multisig that calls an EVM contract function.
 
-## Staked TLOS
+### exrsrv.tf
+
+Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the exrsrv.tf contract that distributes the staking rewards.
+The configuration can be done using the '' action
+That ratio is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10% (Normal reward * .90)
+
+## Contracts
+
+### Staked TLOS
 
 The Staked TLOS contract implements the IERC4262 tokenized vault standard
 
-### Rundown
+#### Rundown
 
 - First, deposited TLOS are converted to sTLOS which represent shares of the TLOS pool
 - The value of those sTLOS shares changes according to the balance of TLOS in the contract
 - On withdraw, sTLOS is converted to TLOS and sent to the Escrow Contract
 
-### Public functions
+#### Public functions
 
 `totalAssets(): uint256  `
 
@@ -87,16 +101,16 @@ Deposit TLOS to the contract
 
 Withdraw assets to Telos Escrow contract
 
-## Telos Escrow
+### Telos Escrow
 
 The Telos Escrow contract locks token on deposit for a configurable amount of time (`lockDuration`)
 
-### Rundown
+#### Rundown
 
 - TLOS is deposited in the contract and gets locked for  `lockDuration` amount of time
 - Once unlocked, depositors can withdraw the TLOS to their account
 
-### Public functions
+#### Public functions
 
 `lockDuration(): uint256 `
 
@@ -126,7 +140,7 @@ Deposits TLOS for depositor.
 
 Withdraw all unlocked TLOS
 
-### Events
+#### Events
 
 `Withdraw(address _from, address _to, uint _amount)`
 
