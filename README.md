@@ -41,8 +41,14 @@ Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native
 ### EXRSRV.TF
 
 Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the __exrsrv.tf__ contract on Telos Native that distributes the staking rewards.
-The configuration can be done using the `setratio(uint64_t ratio_value)` action
-That ratio is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10% (Normal reward * .90)
+The configuration can be done using the following actions:
+
+- `setratio(uint64_t ratio_value)` 
+  -  The ratio is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10% (Normal reward * .90)
+- `setevmconfig(string stlos_contract, eosio::checksum256 storage_key, uint64_t wtlos_index)` actions.
+  -  stlos_contract is your sTLOS EVM contract address
+  -  storage_key is
+  -  wtlos_index is the index of WTLOS in the eosio.evm accounts table
 
 ## EVM Contracts
 
