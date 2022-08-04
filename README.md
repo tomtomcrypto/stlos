@@ -8,9 +8,9 @@ This repository requires NodeJS 14+ installed
 
 ## Deployment
 
-To deploy the staking system you first need to deploy sTLOS and TelosEscrow on Telos EVM
+To deploy the staking system you first need to deploy the __StakedTLOS__ and __TelosEscrow__ contracts on Telos EVM
 
-### sTLOS & TelosEscrow
+### StakedTLOS & TelosEscrow
 
 #### Install dependencies
 
