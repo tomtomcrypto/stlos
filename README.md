@@ -30,7 +30,7 @@ _Remember to save the contract's addresses_
 
 `npx hardhat sourcify  --network testnet`
 
-After that you should transfer ownership of those contracts to the `prods.evm` linked EVM account for configuration of the `lockDuration` and `maxDeposits` variables.
+After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration of the `lockDuration` and `maxDeposits` variables.
 Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native-to-evm-escrow-example) repository for an example of how to propose a multisig that calls an EVM contract function.
 
 ### exrsrv.tf
