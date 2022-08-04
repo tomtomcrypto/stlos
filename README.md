@@ -50,6 +50,12 @@ The configuration can be done using the following actions:
   -  storage_key is the computed storage key for the STLOS contract WTLOS balance
   -  wtlos_index is the index of WTLOS in the eosio.evm accounts table
 
+#### Get the storage key
+
+#### Get the WTLOS index
+
+#### Transfer Ownership
+
 ## EVM Contracts
 
 ### Staked TLOS
