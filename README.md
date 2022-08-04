@@ -38,7 +38,7 @@ After that you should transfer ownership of those contracts to the `prods.evm` l
 
 Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native-to-evm-escrow-example) repository for an example of how to propose a multisig that calls a function of our TelosEscrow contract.
 
-### exrsrv.tf
+### EXRSRV.TF
 
 Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the exrsrv.tf contract on Telos Native that distributes the staking rewards.
 The configuration can be done using the `setratio(uint64_t ratio_value)` action
