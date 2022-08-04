@@ -44,7 +44,7 @@ Once sTLOS & TelosEscrow are deployed and configured all that is left is to upgr
 The configuration can be done using the `setratio(uint64_t ratio_value)` action
 That ratio is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10% (Normal reward * .90)
 
-## Contracts
+## EVM Contracts
 
 ### Staked TLOS
 
