@@ -21,7 +21,9 @@ To deploy the staking system you first need to deploy sTLOS and TelosEscrow on T
 `npx hardhat test`
 
 #### Deploy
-```npx hardhat deploy --network testnet```
+```
+npx hardhat deploy --network testnet
+```
 _Remember to save the contract's addresses_
 
 #### Verify
