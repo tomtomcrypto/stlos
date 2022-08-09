@@ -104,7 +104,7 @@ The Staked TLOS contract is an ERC20 token that implements the [ERC4626](https:/
 
 - First, deposited TLOS are converted to sTLOS which represent shares of the TLOS pool
 - The value of those sTLOS shares changes according to the balance of TLOS in the contract
-- On withdraw, sTLOS is converted to TLOS and sent to the Escrow Contract
+- On withdraw, sTLOS is converted to TLOS and sent to the TelosEscrow contract
 
 #### Public functions
 
