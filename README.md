@@ -12,6 +12,10 @@ To deploy the staking system you first need to deploy the __StakedTLOS__ and __T
 
 ### StakedTLOS & TelosEscrow
 
+#### Clone the project
+
+`git clone https://github.com/telosnetwork/stlos`
+
 #### Install dependencies
 
 `npm install`
