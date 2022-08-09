@@ -98,7 +98,7 @@ To compute that storage key, you can use the following snippet that uses the eth
 
 ### Staked TLOS
 
-The Staked TLOS contract implements the [ERC4626](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC4626) tokenized vault standard
+The Staked TLOS contract is an ERC20 token that implements the [ERC4626](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC4626) tokenized vault standard
 
 #### Rundown
 
