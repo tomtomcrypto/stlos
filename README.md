@@ -1,6 +1,6 @@
 # Telos EVM Staking Contracts
 
-This repository includes two smart contracts that make up the backend of the TLOS staking functionality on Telos EVM.
+This repository includes two smart contracts that make up the backend of the TLOS staking functionality on Telos EVM as well as a guide on how to deploy the whole staking system.
 
 ## Requirements
 
