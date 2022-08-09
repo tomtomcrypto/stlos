@@ -35,7 +35,7 @@ _Gateway timeouts are normal, the contract should still get verified, check usin
 
 #### Transfer Ownership
 
-After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration of the `lockDuration` and `maxDeposits` variables.
+After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration of the `lockDuration` and `maxDeposits` variables via native multisig.
 
 #### Set configuration using a Native multisig
 
