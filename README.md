@@ -60,8 +60,9 @@ _/!\ The EVM address linked to the native multisig account should be owner so th
 
 ### EXRSRV.TF
 
-Once StakedTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the __exrsrv.tf__ contract on Telos Native that distributes the staking rewards.
-The configuration can be done by calling the following actions:
+Once StakedTLOS & TelosEscrow are deployed and configured all that is left is to set and configure the [__exrsrv.tf__](https://github.com/telosnetwork/telos-distribute) contract on Telos Native that is responsible for distributing the staking rewards.
+
+Staking can be configured using the following actions:
 
 - `setratio(uint64_t ratio_value)` 
   -  The `ratio_value` is multiplied to the rewards sent to EVM, a ratio of 90 will for example decrease EVM rewards by 10%
