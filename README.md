@@ -55,7 +55,7 @@ Set the max deposits per address
 
 Transfer ownership of the contract
 
-_/!\ The EVM address linked to the native multisig account should be owner so that only native multisigs can change configuration._
+_/!\ The EVM address linked to the native multisig account should be owner so that only a native multisig can change the configuration._
 
 
 ### EXRSRV.TF
