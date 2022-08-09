@@ -49,7 +49,7 @@ The following EVM functions are available for configuration on TelosEscrow:
 
 `setLockDuration(uint)`
 
-Set the lock duration for deposits
+Set the lock duration for deposits, in seconds
 
 `setMaxDeposits(uint)`
 
@@ -57,7 +57,7 @@ Set the max deposits per address
 
 `transferOwnership(address)`
 
-Transfer ownership of the contract
+Transfer ownership of the contract to the specified address
 
 _/!\ The EVM address linked to the native multisig account should be owner so that only a native multisig can change the configuration._
 
