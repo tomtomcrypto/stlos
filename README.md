@@ -39,7 +39,7 @@ After that you should transfer ownership of those contracts to the `prods.evm` l
 
 #### Set configuration using a Native multisig
 
-Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native-to-evm-escrow-example) repository for an example of how to propose a multisig that calls a function of our TelosEscrow contract. The example uses the `setLockDuration` function but you can easily adapt it for `maxDeposits` or any other functions.
+Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native-to-evm-escrow-example) repository for an example of how to propose a multisig that calls a function of our TelosEscrow contract. The example uses the `setLockDuration` function but you can easily adapt it for `setMaxDeposits` or any other functions.
 
 The following EVM functions are available for configuration on TelosEscrow:
 
