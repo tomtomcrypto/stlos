@@ -59,7 +59,7 @@ The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS E
 
 #### Get the storage key
 
-The storage key we are looking for is part of the address => uint balance mapping of WTLOS. We need to access the mapping value for the STLOS address in order to retreive its WTLOS balance.
+The storage key we are looking for is part of the address => uint balance mapping at position 2 of the WTLOS contract. We need to access the mapping value corresponding to the STLOS address in order to retreive its WTLOS balance.
 
 To compute that storage key, you can use the following snippet that uses the ethers library:
 
