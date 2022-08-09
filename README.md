@@ -88,8 +88,8 @@ To compute that storage key, you can use the following snippet that uses the eth
 
     // Get the stlos balance slot aka our storage key
     const stlos_balance_slot = ethers.utils.keccak256(
-        ethers.utils.hexZeroPad("0x02", 32),
-        ethers.utils.hexZeroPad(stlos, 32),
+        ethers.utils.hexZeroPad("0x02", 32), // Our mapping position
+        ethers.utils.hexZeroPad(stlos, 32), // The stlos key
     );
     console.log("Storage key:", stlos_balance_slot);
 ```
@@ -98,7 +98,7 @@ To compute that storage key, you can use the following snippet that uses the eth
 
 ### Staked TLOS
 
-The Staked TLOS contract implements the IERC4262 tokenized vault standard
+The Staked TLOS contract implements the [ERC4626](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC4626) tokenized vault standard
 
 #### Rundown
 
