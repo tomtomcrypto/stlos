@@ -53,7 +53,7 @@ Set the max deposits per address
 
 `transferOwnership(address)`
 
-Transfer ownership on the contract
+Transfer ownership of the contract, normally the EVM address linked to the native multisig account should stay owner so it remains the only one that can change configuration.
 
 
 ### EXRSRV.TF
