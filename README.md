@@ -96,9 +96,9 @@ To compute that storage key, you can use the following snippet that uses the eth
 
 ## EVM Contracts
 
-### Staked TLOS
+### StakedTLOS
 
-The Staked TLOS contract is an ERC20 token that implements the [ERC4626](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC4626) tokenized vault standard
+The StakedTLOS contract is an ERC20 token that implements the [ERC4626](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#ERC4626) tokenized vault standard
 
 #### Rundown
 
@@ -160,9 +160,9 @@ Deposit TLOS to the contract
 
 Withdraw assets to Telos Escrow contract
 
-### Telos Escrow
+### TelosEscrow
 
-The Telos Escrow contract locks token on deposit for a configurable amount of time (`lockDuration`)
+The TelosEscrow contract locks token on deposit for a configurable amount of time (`lockDuration`)
 
 #### Rundown
 
