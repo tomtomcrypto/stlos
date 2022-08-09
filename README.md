@@ -160,7 +160,7 @@ Deposit TLOS to the contract
 
 Withdraw assets to Telos Escrow contract
 
-#### Deployments
+#### StakedTLOS Deployments
 
 __Testnet :__ 0x909155659e650db8cD09C7EbF7BFDb49d7dB9223
 
@@ -215,7 +215,7 @@ Emitted on sucessfull call to `withdraw()`
 
 Emitted on sucessfull call to `deposit(address depositor)`
 
-#### Deployments
+#### TelosEscrow Deployments
 
 __Testnet :__ 0xB679ab23726d7EaF1b3b807b018A27362E7B85F8
 
