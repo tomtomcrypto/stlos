@@ -24,7 +24,7 @@ To deploy the staking system you first need to deploy the __StakedTLOS__ and __T
 
 `npx hardhat deploy --network testnet`
 
-_Remember to save the StakedTelos contract address, we'll need them to configure the Native Telos exrsrv.tf contract later_
+_Remember to save the StakedTelos contract address, we'll need it to configure the Native Telos exrsrv.tf contract later_
 
 #### Verify
 
