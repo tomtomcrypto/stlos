@@ -160,6 +160,9 @@ Deposit TLOS to the contract
 
 Withdraw assets to Telos Escrow contract
 
+#### Testnet : 0x909155659e650db8cD09C7EbF7BFDb49d7dB9223
+#### Mainnet : TBD
+
 ### TelosEscrow
 
 The TelosEscrow contract locks token on deposit for a configurable amount of time (`lockDuration`)
@@ -208,3 +211,6 @@ Emitted on sucessfull call to `withdraw()`
 `Deposit(address _from, address _depositor, uint _amount)`
 
 Emitted on sucessfull call to `deposit(address depositor)`
+
+#### Testnet : 0xB679ab23726d7EaF1b3b807b018A27362E7B85F8
+#### Mainnet : TBD
