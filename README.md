@@ -41,6 +41,21 @@ After that you should transfer ownership of those contracts to the `prods.evm` l
 
 Follow our [native-to-evm-escrow-example](https://github.com/telosnetwork/native-to-evm-escrow-example) repository for an example of how to propose a multisig that calls a function of our TelosEscrow contract.
 
+The following EVM functions are available for configuration on TelosEscrow:
+
+`setLockDuration(uint)`
+
+Set the lock duration for deposits
+
+`setMaxDeposits(uint)`
+
+Set the max deposits per address
+
+`transferOwnership(address)`
+
+Transfer ownership on the contract
+
+
 ### EXRSRV.TF
 
 Once StakedTLOS & TelosEscrow are deployed and configured all that is left is to upgrade and configure the __exrsrv.tf__ contract on Telos Native that distributes the staking rewards.
