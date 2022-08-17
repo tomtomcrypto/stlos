@@ -45,7 +45,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-convertToShares} */
     function convertToShares(uint256 assets) public view virtual override returns (uint256 shares) {
-        return _convertToShares(assets, Math.Rounding.Down);
+        return _convertToShares(assets, 0, Math.Rounding.Down);
     }
 
     /** @dev See {IERC4262-convertToAssets} */
@@ -75,7 +75,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-previewDeposit} */
     function previewDeposit(uint256 assets) public view virtual override returns (uint256) {
-        return _convertToShares(assets, Math.Rounding.Down);
+        return _convertToShares(assets, 0, Math.Rounding.Down);
     }
 
     /** @dev See {IERC4262-previewMint} */
@@ -85,7 +85,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-previewWithdraw} */
     function previewWithdraw(uint256 assets) public view virtual override returns (uint256) {
-        return _convertToShares(assets, Math.Rounding.Up);
+        return _convertToShares(assets, 0, Math.Rounding.Up);
     }
 
     /** @dev See {IERC4262-previewRedeem} */
@@ -115,7 +115,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
         _wrap();
         address caller = _msgSender();
-        uint256 shares = previewDeposit(msg.value);
+        uint256 shares = _convertToShares(msg.value, msg.value, Math.Rounding.Down);
 
         IWTLOS(asset()).deposit{value: msg.value}();
 
@@ -225,12 +225,12 @@ contract StakedTLOS is ERC20, IERC4626 {
      * Will revert if assets > 0, totalSupply > 0 and totalAssets = 0. That corresponds to a case where any asset
      * would represent an infinite amout of shares.
      */
-    function _convertToShares(uint256 assets, Math.Rounding direction) internal view virtual returns (uint256 shares) {
+    function _convertToShares(uint256 assets, uint256 toIgnore, Math.Rounding direction) internal view virtual returns (uint256 shares) {
         uint256 supply = totalSupply();
         return
             (assets == 0 || supply == 0)
                 ? assets.mulDiv(10**decimals(), 10**_asset.decimals(), direction)
-                : assets.mulDiv(supply, totalAssets(), direction);
+                : assets.mulDiv(supply, totalAssets() - toIgnore, direction);
     }
 
     /**
