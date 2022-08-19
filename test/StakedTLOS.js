@@ -82,45 +82,53 @@ describe("StakedTLOS", function () {
       //expect(await stlos.maxWithdraw(owner.address)).to.equal(ethers.utils.parseEther("101.0"), "Owner should still have max withdrawl of 101 after address 1 deposited 1");
     });
 
-    xit("Check dust and preview accuracy", async function () {
-      const [owner, addr1, addr2] = await ethers.getSigners();
-      for (let a of [owner, addr1, addr2]) {
+    it("Check dust and preview accuracy", async function () {
+      const yieldAmount = "789.56789";
+
+      const signers = await ethers.getSigners();
+      let maxDrift;
+      let counter = 0;
+      for (let a of signers) {
         // check if deposit == withdraw at different sizes, see what the biggest amount of dust is
         // actually transfer
-        console.log(`\n\nDoing test for ${a.address}`);
+        if (++counter % 5 == 0) {
+          await a.sendTransaction({
+            to: stlos.address,
+            value: ethers.utils.parseEther("9995.0000"),
+          });
+        }
 
-        let maxDrift;
-        for (const num of ["1.0", "0.0000002", "43.0", "2.32123", "678.9102345", "8324.029394939", "1.23456765", "1.0", "3.0", "25.0000"]) {
-          console.log(`Doing test for ${num}`);
+        let doneYield = false;
+        for (const num of ["1.0", "0.0000002", "0.00000000000000027", "43.0", "2.32123", "678.9102345", "8324.029394939", "1.23456765", "1.0", "3.0", "25.0000"]) {
 
           const bigNum = ethers.utils.parseEther(num);
           const beforeBalance = await stlos.balanceOf(a.address);
           const beforePreview = await stlos.previewDeposit(bigNum);
 
-          console.log(`Depositing: ${num}`)
           await stlos.connect(a).depositTLOS({value: bigNum});
-
-          const yieldAmount = "1.0";
-          console.log(`Sending ${yieldAmount} as yield`)
-          await owner.sendTransaction({
-            to: stlos.address,
-            value: ethers.utils.parseEther(yieldAmount),
-          });
 
           const afterBalance = await stlos.balanceOf(a.address);
           const afterPreview = await stlos.previewDeposit(bigNum);
 
           const tokensReceived = afterBalance.sub(beforeBalance);
-          console.log(`Received ${ethers.utils.formatEther(tokensReceived)} sTLOS`)
-          const withdrawAmount = await stlos.previewWithdraw(tokensReceived);
-          console.log(`Withdraw amount ${ethers.utils.formatEther(withdrawAmount)} TLOS`)
-          expect(withdrawAmount).to.equal(bigNum);
+          const withdrawAmount = await stlos.previewRedeem(tokensReceived);
           const dust = bigNum.sub(withdrawAmount);
-          console.log(`Dust lost due to rounding: ${dust.toString()}`);
+          if (!maxDrift || maxDrift[1].lt(dust)) {
+            maxDrift = [num, dust];
+          }
 
           expect(beforePreview).to.equal(afterPreview, "preview amount should not change");
+          if (!doneYield) {
+            doneYield = true;
+            await a.sendTransaction({
+              to: stlos.address,
+              value: ethers.utils.parseEther(yieldAmount),
+            });
+          }
         }
       }
+
+      console.log(`\n\nMax dust lost: ${ethers.utils.formatEther(maxDrift[1])} on a deposit of ${maxDrift[0]}`)
 
     });
   });

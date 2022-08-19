@@ -8,6 +8,9 @@ require('hardhat-deploy');
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
+  mocha: {
+    timeout: 500000000
+  },
   solidity: {
     compilers: [
       {
@@ -23,6 +26,11 @@ module.exports = {
     deployer: 'privatekey://0x87ef69a835f8cd0c44ab99b7609a20b2ca7f1c8470af4f0e5b44db927d542084'
   },
   networks: {
+    hardhat: {
+      accounts: {
+        count: 30
+      }
+    },
     testnet: {
       url: "https://testnet.telos.net/evm",
       accounts: ['0x87ef69a835f8cd0c44ab99b7609a20b2ca7f1c8470af4f0e5b44db927d542084'],
