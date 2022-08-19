@@ -82,7 +82,7 @@ describe("StakedTLOS", function () {
       //expect(await stlos.maxWithdraw(owner.address)).to.equal(ethers.utils.parseEther("101.0"), "Owner should still have max withdrawl of 101 after address 1 deposited 1");
     });
 
-    it("Check dust and preview accuracy", async function () {
+    xit("Check dust and preview accuracy", async function () {
       const [owner, addr1, addr2] = await ethers.getSigners();
       for (let a of [owner, addr1, addr2]) {
         // check if deposit == withdraw at different sizes, see what the biggest amount of dust is
@@ -90,20 +90,30 @@ describe("StakedTLOS", function () {
         console.log(`\n\nDoing test for ${a.address}`);
 
         let maxDrift;
-        for (const num of ["0.0000002", "43.0", "2.32123", "678.9102345", "8324.029394939", "1.23456765", "1.0", "3.0", "25.0000"]) {
+        for (const num of ["1.0", "0.0000002", "43.0", "2.32123", "678.9102345", "8324.029394939", "1.23456765", "1.0", "3.0", "25.0000"]) {
           console.log(`Doing test for ${num}`);
 
           const bigNum = ethers.utils.parseEther(num);
           const beforeBalance = await stlos.balanceOf(a.address);
           const beforePreview = await stlos.previewDeposit(bigNum);
 
+          console.log(`Depositing: ${num}`)
           await stlos.connect(a).depositTLOS({value: bigNum});
+
+          const yieldAmount = "1.0";
+          console.log(`Sending ${yieldAmount} as yield`)
+          await owner.sendTransaction({
+            to: stlos.address,
+            value: ethers.utils.parseEther(yieldAmount),
+          });
 
           const afterBalance = await stlos.balanceOf(a.address);
           const afterPreview = await stlos.previewDeposit(bigNum);
 
           const tokensReceived = afterBalance.sub(beforeBalance);
+          console.log(`Received ${ethers.utils.formatEther(tokensReceived)} sTLOS`)
           const withdrawAmount = await stlos.previewWithdraw(tokensReceived);
+          console.log(`Withdraw amount ${ethers.utils.formatEther(withdrawAmount)} TLOS`)
           expect(withdrawAmount).to.equal(bigNum);
           const dust = bigNum.sub(withdrawAmount);
           console.log(`Dust lost due to rounding: ${dust.toString()}`);
