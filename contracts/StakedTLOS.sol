@@ -11,6 +11,12 @@ interface IWTLOS {
     function deposit() external payable;
     function transfer(address to, uint value) external returns (bool);
     function withdraw(uint) external;
+    function balanceOf(address) external returns (uint);
+}
+
+interface ITelosEscrow {
+    function deposit(address) payable external;
+    function withdraw(uint) external;
 }
 
 contract StakedTLOS is ERC20, IERC4626 {
@@ -18,8 +24,27 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     IERC20Metadata private immutable _asset;
 
-    constructor(IERC20Metadata asset_) ERC20("Staked TLOS", "STLOS") {
+    ITelosEscrow public _escrow;
+
+    address public _admin;
+
+    constructor(IERC20Metadata asset_, ITelosEscrow escrow_, address admin_) ERC20("Staked TLOS", "STLOS") {
+        require(Address.isContract(address(asset_)), 'constructor: asset be a valid contract');
+        require(Address.isContract(address(escrow_)), 'constructor: escrow be a valid contract');
         _asset = asset_;
+        _escrow = escrow_;
+        _admin = admin_;
+    }
+
+    function setEscrow(ITelosEscrow escrow_) public {
+        require(msg.sender == _admin, 'This can only be called by the admin address');
+        require(Address.isContract(address(escrow_)), 'escrow needs to be a valid contract');
+        _escrow = escrow_;
+    }
+
+    function setAdmin(address admin_) public  {
+        require(msg.sender == _admin, 'This can only be called by the admin address');
+        _admin = admin_;
     }
 
     /** @dev See {IERC4262-asset} */
@@ -34,7 +59,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-convertToShares} */
     function convertToShares(uint256 assets) public view virtual override returns (uint256 shares) {
-        return _convertToShares(assets, Math.Rounding.Down);
+        return _convertToShares(assets, 0, Math.Rounding.Down);
     }
 
     /** @dev See {IERC4262-convertToAssets} */
@@ -64,7 +89,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-previewDeposit} */
     function previewDeposit(uint256 assets) public view virtual override returns (uint256) {
-        return _convertToShares(assets, Math.Rounding.Down);
+        return _convertToShares(assets, 0, Math.Rounding.Down);
     }
 
     /** @dev See {IERC4262-previewMint} */
@@ -74,7 +99,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-previewWithdraw} */
     function previewWithdraw(uint256 assets) public view virtual override returns (uint256) {
-        return _convertToShares(assets, Math.Rounding.Up);
+        return _convertToShares(assets, 0, Math.Rounding.Up);
     }
 
     /** @dev See {IERC4262-previewRedeem} */
@@ -82,11 +107,17 @@ contract StakedTLOS is ERC20, IERC4626 {
         return _convertToAssets(shares, Math.Rounding.Down);
     }
 
+    function _unwrap(uint amount) internal {
+        uint256 myBalance = IWTLOS(asset()).balanceOf(address(this));
+        if (amount <= myBalance) {
+            IWTLOS(asset()).withdraw(amount);
+        }
+    }
+
     function _wrap() internal {
-        uint256 myBalance = address(this).balance;
-        // Don't wrap value from this transaction... just wrap if we had leftover yield not already wrapped
-        if ((myBalance - msg.value) > 0) {
-            IWTLOS(asset()).deposit{value: myBalance}();
+        uint256 myBalance = address(this).balance - msg.value;
+        if (myBalance > 0) {
+            IWTLOS(asset()).deposit{value: myBalance }();
         }
     }
 
@@ -98,7 +129,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
         _wrap();
         address caller = _msgSender();
-        uint256 shares = previewDeposit(msg.value);
+        uint256 shares = _convertToShares(msg.value, msg.value, Math.Rounding.Down);
 
         IWTLOS(asset()).deposit{value: msg.value}();
 
@@ -164,29 +195,9 @@ contract StakedTLOS is ERC20, IERC4626 {
         // if _asset is ERC777, transfer can call reenter AFTER the transfer happens through
         // the tokensReceived hook, so we need to transfer after we burn to keep the invariants.
         _burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
 
-        emit Withdraw(caller, receiver, owner, assets, shares);
-
-        return shares;
-    }
-
-    function withdrawTLOS(
-        uint256 assets,
-        address payable receiver,
-        address owner
-    ) public returns (uint256) {
-        _wrap();
-        require(assets > 0, "ERC4626: assets to withdraw is zero");
-        require(assets <= maxWithdraw(owner), "ERC4626: withdraw more then max");
-
-        address caller = _msgSender();
-        uint256 shares = previewWithdraw(assets);
-
-        IWTLOS(asset()).withdraw(assets);
-        receiver.transfer(assets);
-
-        _burn(owner, shares);
+        _unwrap(assets);
+        _escrow.deposit{value: assets}(address(receiver));
 
         emit Withdraw(caller, receiver, owner, assets, shares);
 
@@ -212,7 +223,10 @@ contract StakedTLOS is ERC20, IERC4626 {
         // if _asset is ERC777, transfer can call reenter AFTER the transfer happens through
         // the tokensReceived hook, so we need to transfer after we burn to keep the invariants.
         _burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
+
+        _unwrap(assets);
+
+        _escrow.deposit{value: assets}(receiver);
 
         emit Withdraw(caller, receiver, owner, assets, shares);
 
@@ -225,12 +239,12 @@ contract StakedTLOS is ERC20, IERC4626 {
      * Will revert if assets > 0, totalSupply > 0 and totalAssets = 0. That corresponds to a case where any asset
      * would represent an infinite amout of shares.
      */
-    function _convertToShares(uint256 assets, Math.Rounding direction) internal view virtual returns (uint256 shares) {
+    function _convertToShares(uint256 assets, uint256 toIgnore, Math.Rounding direction) internal view virtual returns (uint256 shares) {
         uint256 supply = totalSupply();
         return
             (assets == 0 || supply == 0)
                 ? assets.mulDiv(10**decimals(), 10**_asset.decimals(), direction)
-                : assets.mulDiv(supply, totalAssets(), direction);
+                : assets.mulDiv(supply, totalAssets() - toIgnore, direction);
     }
 
     /**
