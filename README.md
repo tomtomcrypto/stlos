@@ -167,7 +167,7 @@ Withdraw assets to Telos Escrow contract
 
 #### Deployments
 
-__Testnet :__ 0x909155659e650db8cD09C7EbF7BFDb49d7dB9223
+__Testnet :__ 0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58
 
 __Mainnet :__ TBD
 
@@ -222,6 +222,6 @@ Emitted on sucessfull call to `deposit(address depositor)`
 
 #### Deployments
 
-__Testnet :__ 0xB679ab23726d7EaF1b3b807b018A27362E7B85F8
+__Testnet :__ 0xbD4d1bD71A8354a1c416317aF6f6fCff319C9D97
 
 __Mainnet :__ TBD
