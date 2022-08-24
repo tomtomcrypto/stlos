@@ -24,13 +24,27 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     IERC20Metadata private immutable _asset;
 
-    ITelosEscrow private _escrow;
+    ITelosEscrow public _escrow;
 
-    constructor(IERC20Metadata asset_, ITelosEscrow escrow_) ERC20("Staked TLOS", "STLOS") {
+    address public _admin;
+
+    constructor(IERC20Metadata asset_, ITelosEscrow escrow_, address admin_) ERC20("Staked TLOS", "STLOS") {
         require(Address.isContract(address(asset_)), 'constructor: asset be a valid contract');
         require(Address.isContract(address(escrow_)), 'constructor: escrow be a valid contract');
         _asset = asset_;
         _escrow = escrow_;
+        _admin = admin_;
+    }
+
+    function setEscrow(ITelosEscrow escrow_) public {
+        require(msg.sender == _admin, 'This can only be called by the admin address');
+        require(Address.isContract(address(escrow_)), 'constructor: escrow be a valid contract');
+        _escrow = escrow_;
+    }
+
+    function setAdmin(address admin_) public  {
+        require(msg.sender == _admin, 'This can only be called by the admin address');
+        _admin = admin_;
     }
 
     /** @dev See {IERC4262-asset} */

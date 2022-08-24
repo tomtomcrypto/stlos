@@ -34,7 +34,6 @@ contract TelosEscrow is Ownable {
 
     /** Get the deposits of an address */
     function depositsOf(address depositor) external view returns (lockedTokens[] memory) {
-        require(deposits[depositor].length > 0, "No deposits for this address");
         return deposits[depositor];
     }
 

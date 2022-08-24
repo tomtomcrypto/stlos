@@ -4,13 +4,33 @@ const { ethers } = require("hardhat");
 describe("StakedTLOS", function () {
   let WTLOS, wtlos, EscrowTLOS, escrow, StakedTLOS, stlos;
   beforeEach(async () => {
+    const [owner, addr1, addr2] = await ethers.getSigners();
     WTLOS = await ethers.getContractFactory("WTLOS");
     wtlos = await WTLOS.deploy();
     EscrowTLOS = await ethers.getContractFactory("TelosEscrow");
     escrow = await EscrowTLOS.deploy(25, 60);
     StakedTLOS = await ethers.getContractFactory("StakedTLOS");
-    stlos = await StakedTLOS.deploy(wtlos.address, escrow.address);
+    stlos = await StakedTLOS.deploy(wtlos.address, escrow.address, owner.address);
   })
+  describe("Configuration", () => {
+
+    it("Should let admin set a new escrow contract", async function () {
+      const [owner, addr1, addr2] = await ethers.getSigners();
+      await expect(stlos.setEscrow(escrow.address)).to.not.be.reverted;
+    });
+    it("Should not let other users set a new escrow contract", async function () {
+      const [owner, addr1, addr2] = await ethers.getSigners();
+      await  expect(stlos.connect(addr1.address).setEscrow(addr2.address)).to.be.reverted;
+    });
+    it("Should let admin set a new admin", async function () {
+      const [owner, addr1, addr2] = await ethers.getSigners();
+      await expect(stlos.setAdmin(addr1.address)).to.not.be.reverted;
+    });
+    it("Should not let other users set a new admin", async function () {
+      const [owner, addr1, addr2] = await ethers.getSigners();
+      await expect(stlos.connect(addr1.address).setAdmin(addr1.address)).to.be.reverted;
+    });
+  });
   describe("Core", () => {
     it("Should observe yield and deposit/withdraw successfully to escrow", async function () {
       const [owner, addr1, addr2] = await ethers.getSigners();
