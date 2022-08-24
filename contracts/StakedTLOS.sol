@@ -38,7 +38,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     function setEscrow(ITelosEscrow escrow_) public {
         require(msg.sender == _admin, 'This can only be called by the admin address');
-        require(Address.isContract(address(escrow_)), 'constructor: escrow be a valid contract');
+        require(Address.isContract(address(escrow_)), 'escrow needs to be a valid contract');
         _escrow = escrow_;
     }
 

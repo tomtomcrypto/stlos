@@ -9,7 +9,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
   });
   const StakedTLOS = await deploy('StakedTLOS', {
     from: deployer,
-    args: [WTLOS, TelosEscrow.address],
+    args: [WTLOS, TelosEscrow.address, "0x7c56101c01eaaece3d1bb330910c8e9183b39dbd"],
   });
 
   console.log("StakedTLOS deployed to:", StakedTLOS.address);
