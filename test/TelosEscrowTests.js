@@ -138,11 +138,9 @@ describe("TelosEscrow", function () {
 
       // CHECK WITHDRAW
       await expect(contract.withdraw()).to.not.be.reverted;
-      const deposits = await contract.depositsOf(owner.address);
 
       // CHECK REMAINING BALANCE IS 0 & FUNDS WERE RECEIVED
       const balance = await contract.balanceOf(owner.address);
-      console.log(deposits);
       expect(balance).to.equal(0);
       expect(owner.balance == oldBalance);
     });
