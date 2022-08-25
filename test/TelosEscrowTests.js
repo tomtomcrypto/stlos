@@ -123,5 +123,28 @@ describe("TelosEscrow", function () {
       expect(balance).to.equal(0);
       expect(owner.balance == oldBalance);
     });
+
+    it("Should let you withdraw multiple deposit once " + LOCK_DURATION + "s lock is over", async function () {
+      const oldBalance = owner.balance;
+      await contract.deposit(owner.address, {value: ONE_TLOS});
+      await contract.deposit(owner.address, {value: ONE_TLOS});
+      await contract.deposit(owner.address, {value: ONE_TLOS});
+      await contract.deposit(owner.address, {value: ONE_TLOS});
+      await contract.deposit(owner.address, {value: ONE_TLOS});
+
+      // INCREASE TIME BY LOCK DURATION + 1
+      await network.provider.send("evm_increaseTime", [LOCK_DURATION + 2])
+      await network.provider.send("evm_mine")
+
+      // CHECK WITHDRAW
+      await expect(contract.withdraw()).to.not.be.reverted;
+      const deposits = await contract.depositsOf(owner.address);
+
+      // CHECK REMAINING BALANCE IS 0 & FUNDS WERE RECEIVED
+      const balance = await contract.balanceOf(owner.address);
+      console.log(deposits);
+      expect(balance).to.equal(0);
+      expect(owner.balance == oldBalance);
+    });
   })
 });
