@@ -108,6 +108,20 @@ const web3 = new Web3();
 })();
 ```
 
+And then check you have the right slot using
+
+
+``` 
+    let balance = 0;
+
+    try {
+        balance = await provider.getStorageAt(contract, slot);
+
+    } catch (e) {}
+
+    console.log(balance)
+```
+
 ## EVM Contracts
 
 ### :: StakedTLOS
