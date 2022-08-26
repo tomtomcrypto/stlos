@@ -5,6 +5,7 @@ const LOCK_DURATION = 120;
 const ZERO_TLOS = ethers.utils.parseEther("0.0");
 const ONE_TLOS = ethers.utils.parseEther("1.0");
 const TWO_TLOS = ethers.utils.parseEther("2.0");
+const THREE_TLOS = ethers.utils.parseEther("3.0");
 
 describe("TelosEscrow", function () {
   let contract;
@@ -218,6 +219,30 @@ describe("TelosEscrow", function () {
       // CHECK REMAINING DEPOSITS
       const deposits = await contract.depositsOf(owner.address);
       expect(deposits.length).to.equal(2);
+    });
+
+    it("Should only withdraw deposits for connected wallet/user", async function () {
+      const [owner, addr1] = await ethers.getSigners();
+
+      await contract.deposit(owner.address, { value: THREE_TLOS });
+      await contract.deposit(owner.address, { value: THREE_TLOS });
+
+      await contract.deposit(addr1.address, { value: ONE_TLOS });
+
+      let deposits = await contract.depositsOf(owner.address);
+      expect(deposits.length).to.equal(2);
+      deposits = await contract.depositsOf(addr1.address);
+      expect(deposits.length).to.equal(1);
+
+      await network.provider.send("evm_increaseTime", [LOCK_DURATION + 2]);
+      await network.provider.send("evm_mine");
+
+      await contract.connect(addr1).withdraw();
+
+      deposits = await contract.depositsOf(owner.address);
+      expect(deposits.length).to.equal(2);
+      deposits = await contract.depositsOf(addr1.address);
+      expect(deposits.length).to.equal(0);
     });
   });
 });
