@@ -25,6 +25,7 @@ describe("TelosEscrow", function () {
       const max = await contract.maxDeposits();
       expect(max).to.equal(MAX_DEPOSIT);
     });
+
     it("Should have a " + LOCK_DURATION + "s lock duration", async () => {
       const duration = await contract.lockDuration();
       expect(duration).to.equal(LOCK_DURATION);
@@ -55,6 +56,7 @@ describe("TelosEscrow", function () {
         expect(await contract.lockDuration()).to.equal(LOCK_DURATION * 2);
       }
     );
+
     it("Shouldn't let unauthorized addresses change settings", async function () {
       const [owner, addr1] = await ethers.getSigners();
       await expect(contract.connect(addr1).setMaxDeposits(MAX_DEPOSIT * 2)).to
@@ -69,32 +71,44 @@ describe("TelosEscrow", function () {
       expect(await contract.owner()).to.equal(addr1.address);
     });
   });
+
   describe("Core", function () {
     it("Shouldn't be able to deposit 0 tokens", async function () {
       await expect(contract.deposit(owner.address)).to.be.reverted;
     });
-    it("Should be able to deposit tokens for a specified address", async function () {
+
+    it("Should store deposit", async function () {
       await contract.deposit(owner.address, { value: ONE_TLOS });
       // CHECK A DEPOSIT WAS MADE
-      const total = await contract.balanceOf(owner.address);
-      expect(total).to.be.equal(ONE_TLOS);
+      const deposits = await contract.depositsOf(owner.address);
+      expect(deposits.length).to.be.equal(1);
+    });
+
+    it("Should lock deposit", async function () {
+      await contract.deposit(owner.address, { value: ONE_TLOS });
       // CHECK IT IS NOT UNLOCKED YET
       const unlocked = await contract.maxWithdraw(owner.address);
       expect(unlocked).to.equal(ZERO_TLOS);
     });
 
-    it("Should return a balance details if a balance was deposited", async function () {
+    it("Should return escrow balance", async function () {
       await contract.deposit(owner.address, { value: ONE_TLOS });
-      const balances = await contract.depositsOf(owner.address);
-      expect(balances.length).to.equal(1);
-      expect(balances[0].amount).to.equal(ONE_TLOS);
+      // CHECK ESCROW BALANCE
+      const total = await contract.balanceOf(owner.address);
+      expect(total).to.be.equal(ONE_TLOS);
     });
 
-    it("Should return a balance total if one or more balances were deposited", async function () {
+    it("Should return escrow balance total for multiple deposits", async function () {
       await contract.deposit(owner.address, { value: ONE_TLOS });
       await contract.deposit(owner.address, { value: ONE_TLOS });
       const balance = await contract.balanceOf(owner.address);
       expect(balance).to.equal(TWO_TLOS);
+    });
+
+    it("Should return a deposit amount", async function () {
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+      const deposits = await contract.depositsOf(owner.address);
+      expect(deposits[0].amount).to.equal(ONE_TLOS);
     });
 
     it(
@@ -118,10 +132,7 @@ describe("TelosEscrow", function () {
         LOCK_DURATION +
         "s is over",
       async function () {
-        // INCREASE TIME BY LOCK DURATION / 2
-        await network.provider.send("evm_increaseTime", [LOCK_DURATION / 2]);
-        await network.provider.send("evm_mine");
-
+        await contract.deposit(owner.address, { value: ONE_TLOS });
         await expect(contract.withdraw()).to.be.reverted;
       }
     );
@@ -131,7 +142,8 @@ describe("TelosEscrow", function () {
       async function () {
         const oldBalance = owner.balance;
         await contract.deposit(owner.address, { value: ONE_TLOS });
-        const test = await contract.depositsOf(owner.address);
+        let balance = await contract.balanceOf(owner.address);
+        expect(balance).to.equal(ONE_TLOS);
 
         // INCREASE TIME BY LOCK DURATION + 1
         await network.provider.send("evm_increaseTime", [LOCK_DURATION + 1]);
@@ -141,9 +153,9 @@ describe("TelosEscrow", function () {
         await contract.withdraw();
 
         // CHECK REMAINING BALANCE IS 0 & FUNDS WERE RECEIVED
-        const balance = await contract.balanceOf(owner.address);
+        balance = await contract.balanceOf(owner.address);
         expect(balance).to.equal(0);
-        expect(owner.balance == oldBalance);
+        expect(owner.balance === oldBalance);
       }
     );
 
@@ -152,6 +164,7 @@ describe("TelosEscrow", function () {
         LOCK_DURATION +
         "s lock is over",
       async function () {
+        const oldBalance = owner.balance;
         await contract.deposit(owner.address, { value: ONE_TLOS });
         await contract.deposit(owner.address, { value: ONE_TLOS });
         await contract.deposit(owner.address, { value: ONE_TLOS });
@@ -171,6 +184,7 @@ describe("TelosEscrow", function () {
         // CHECK REMAINING DEPOSITS
         deposits = await contract.depositsOf(owner.address);
         expect(deposits.length).to.equal(0);
+        expect(owner.balance === oldBalance);
       }
     );
 
