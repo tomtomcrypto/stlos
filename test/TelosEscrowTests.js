@@ -57,12 +57,22 @@ describe("TelosEscrow", function () {
       }
     );
 
-    it("Shouldn't let unauthorized addresses change settings", async function () {
+    it("Shouldn't let unauthorized addresses set max deposits", async function () {
       const [owner, addr1] = await ethers.getSigners();
       await expect(contract.connect(addr1).setMaxDeposits(MAX_DEPOSIT * 2)).to
         .be.reverted;
+    });
+
+    it("Shouldn't let unauthorized addresses set lock duration", async function () {
+      const [owner, addr1] = await ethers.getSigners();
       await expect(contract.connect(addr1).setLockDuration(LOCK_DURATION * 2))
         .to.be.reverted;
+    });
+
+    it("Shouldn't let unauthorized addresses transfer ownership", async function () {
+      const [owner, addr1] = await ethers.getSigners();
+      await expect(contract.connect(addr1).transferOwnership(addr1.address)).to
+        .be.reverted;
     });
 
     it("Should let the owner transfer ownership", async function () {
