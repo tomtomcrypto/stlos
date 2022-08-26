@@ -73,11 +73,11 @@ Staking can be configured using the following actions:
 - `setevmconfig(string stlos_contract, eosio::checksum256 storage_key, uint64_t wtlos_index)`
   -  `stlos_contract` is your StakedTLOS EVM contract address
   -  `storage_key` is the computed storage key for the STLOS contract WTLOS balance
-  -  `wtlos_index` is the index of WTLOS in the eosio.evm accounts table, you can use a block explorer or a JS script to retreive it using the  WTLOS address
+  -  `wtlos_index` is the index of WTLOS in the eosio.evm accounts table
 
 #### Get the WTLOS index
 
-The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x)
+The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x), you can use a block explorer or a JS script to retreive it.
 
 #### Get the storage key
 
