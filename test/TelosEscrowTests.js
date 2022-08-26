@@ -147,12 +147,11 @@ describe("TelosEscrow", function () {
       }
     );
 
-    xit(
-      "Should let you withdraw multiple deposit once " +
+    it(
+      "Should let you withdraw multiple deposits once " +
         LOCK_DURATION +
         "s lock is over",
       async function () {
-        const oldBalance = owner.balance;
         await contract.deposit(owner.address, { value: ONE_TLOS });
         await contract.deposit(owner.address, { value: ONE_TLOS });
         await contract.deposit(owner.address, { value: ONE_TLOS });
@@ -163,16 +162,38 @@ describe("TelosEscrow", function () {
         await network.provider.send("evm_increaseTime", [LOCK_DURATION + 2]);
         await network.provider.send("evm_mine");
 
+        // CHECK CURRENT DEPOSITS
         let deposits = await contract.depositsOf(owner.address);
         expect(deposits.length).to.equal(5);
-        // CHECK WITHDRAW
-        await expect(contract.withdraw()).to.not.be.reverted;
 
-        // CHECK REMAINING BALANCE IS 0 & FUNDS WERE RECEIVED
+        await contract.withdraw();
+
+        // CHECK REMAINING DEPOSITS
         deposits = await contract.depositsOf(owner.address);
         expect(deposits.length).to.equal(0);
-        // expect(owner.balance == oldBalance);
       }
     );
+
+    it("Should not withdraw locked deposits", async function () {
+      // UNLOCKED
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+
+      // INCREASE TIME BY LOCK DURATION + 1
+      await network.provider.send("evm_increaseTime", [LOCK_DURATION + 2]);
+      await network.provider.send("evm_mine");
+
+      // LOCKED
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+      await contract.deposit(owner.address, { value: ONE_TLOS });
+
+      // CHECK WITHDRAW
+      await contract.withdraw();
+
+      // CHECK REMAINING DEPOSITS
+      const deposits = await contract.depositsOf(owner.address);
+      expect(deposits.length).to.equal(2);
+    });
   });
 });
