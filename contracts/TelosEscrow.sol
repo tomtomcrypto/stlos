@@ -74,12 +74,12 @@ contract TelosEscrow is Ownable {
         // REMOVE UNLOCKED TOKENS & GET TOTAL AMOUNT
         uint _i = 0;
         while (_i < tokens.length - 1) {
-            if(tokens[i].until <= block.timestamp){
-                amount = amount + tokens[i].amount;
-                tokens[i] = tokens[tokens.length-1];
+            if(tokens[_i].until <= block.timestamp){
+                amount = amount + tokens[_i].amount;
+                tokens[_i] = tokens[tokens.length-1];
                 tokens.pop();
             }else{
-                _i++
+                _i++;
             }
         }
         require(amount > 0, "You do not have any unlocked tokens to withdraw");
