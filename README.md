@@ -94,12 +94,12 @@ const web3 = new Web3();
 (async function() {
     const provider = ethers.getDefaultProvider("https://testnet.telos.net/evm");
 
-    const contract = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9";
+    const contract = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS testnet address
 
     // Get the array slot
     const slot = ethers.utils.keccak256(
         ethers.utils.concat( [
-            ethers.utils.hexZeroPad("0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58", 32), // Our STLOS address
+            ethers.utils.hexZeroPad("0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58", 32), // STLOS testnet address
             ethers.utils.hexZeroPad("0x03", 32), // The position of the balance mapping inside WTLOS
         ])
     );
