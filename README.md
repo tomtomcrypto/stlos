@@ -77,26 +77,49 @@ Staking can be configured using the following actions:
 
 #### Get the WTLOS index
 
-The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x)
+The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x), you can use a block explorer or a JS script to retreive it.
 
 #### Get the storage key
 
-The storage key we are looking for is part of the `address => uint` balance mapping at position 2 of the WTLOS contract. We need to access the mapping value corresponding to the STLOS address in order to retreive its WTLOS balance.
+The storage key we are looking for is part of the `address => uint` balance mapping at position 3 of the WTLOS contract. We need to access the mapping value corresponding to the STLOS address in order to retreive its WTLOS balance.
 
 To compute that storage key, you can use the following snippet that uses the ethers library:
 
 ```
+const { BigNumber, ethers, utils } = require("ethers");
+const Web3 = require ('web3');
+
+const web3 = new Web3();
+
+(async function() {
     const provider = ethers.getDefaultProvider("https://testnet.telos.net/evm");
 
-    const wtlos = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS address on testnet
-    const stlos = "YOUR_STLOS_CONTRACT_ADDRESS"; // StakedTLOS address on testnet
+    const contract = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS testnet address
 
-    // Get the stlos balance slot aka our storage key
-    const stlos_balance_slot = ethers.utils.keccak256(
-        ethers.utils.hexZeroPad("0x02", 32), // Our mapping position
-        ethers.utils.hexZeroPad(stlos, 32), // The stlos key
+    // Get the array slot
+    const slot = ethers.utils.keccak256(
+        ethers.utils.concat( [
+            ethers.utils.hexZeroPad("0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58", 32), // STLOS testnet address
+            ethers.utils.hexZeroPad("0x03", 32), // The position of the balance mapping inside WTLOS
+        ])
     );
-    console.log("Storage key:", stlos_balance_slot);
+
+    console.log("Storage key is: ", slot)
+})();
+```
+
+And then check you have the right slot using
+
+
+``` 
+    let balance = 0;
+
+    try {
+        balance = await provider.getStorageAt(contract, slot);
+
+    } catch (e) {}
+
+    console.log(balance)
 ```
 
 ## EVM Contracts
