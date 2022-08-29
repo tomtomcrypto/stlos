@@ -69,7 +69,7 @@ contract StakedTLOS is ERC20, IERC4626 {
 
     /** @dev See {IERC4262-maxDeposit} */
     function maxDeposit(address) public view virtual override returns (uint256) {
-        return type(uint256).max;
+        return _isVaultCollateralized() ? type(uint256).max : 0;
     }
 
     /** @dev See {IERC4262-maxMint} */
