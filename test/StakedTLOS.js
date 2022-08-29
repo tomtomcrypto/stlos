@@ -32,16 +32,21 @@ describe("StakedTLOS", function () {
     });
   });
   describe("Core", () => {
-    it("Should set initial share price to 1", async function () {
+    it("Share price should be consistant and only increase when rewards are deposited", async function () {
       const [owner, addr1, addr2] = await ethers.getSigners();
-      await stlos.depositTLOS({value: ethers.utils.parseEther("1.0")});
+      await stlos.depositTLOS({value: ethers.utils.parseEther("4.0")});
       expect(await stlos.previewDeposit(ethers.utils.parseEther("1.0"))).to.be.equal(ethers.utils.parseEther("1.0"));
       await stlos.depositTLOS({value: ethers.utils.parseEther("99.0")});
       expect(await stlos.previewDeposit(ethers.utils.parseEther("1.0"))).to.be.equal(ethers.utils.parseEther("1.0"));
+
+      // Emulate rewards
       await owner.sendTransaction({
         to: stlos.address,
-        value: ethers.utils.parseEther("100.0"),
+        value: ethers.utils.parseEther("103.0"),
       });
+
+      expect(await stlos.previewDeposit(ethers.utils.parseEther("1.0"))).to.be.equal(ethers.utils.parseEther("0.5"));
+      await stlos.depositTLOS({value: ethers.utils.parseEther("99.0")});
       expect(await stlos.previewDeposit(ethers.utils.parseEther("1.0"))).to.be.equal(ethers.utils.parseEther("0.5"));
     });
     it("Should observe yield and deposit/withdraw successfully to escrow", async function () {
