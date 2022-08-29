@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
 
 contract TelosEscrow is Ownable {
 
@@ -73,14 +72,11 @@ contract TelosEscrow is Ownable {
         uint amount = 0;
         lockedTokens[] storage tokens = deposits[msg.sender];
         // REMOVE UNLOCKED TOKENS & GET TOTAL AMOUNT
-        uint _i = 0;
-        while (_i < tokens.length) {
-            if(tokens[_i].until <= block.timestamp){
-                amount = amount + tokens[_i].amount;
-                tokens[_i] = tokens[tokens.length-1];
+        for (uint i=0; i<tokens.length; i++) {
+            if(tokens[i].until <= block.timestamp){
+                amount = amount + tokens[i].amount;
+                tokens[i] = tokens[tokens.length-1];
                 tokens.pop();
-            }else{
-                _i++;
             }
         }
         require(amount > 0, "You do not have any unlocked tokens to withdraw");
