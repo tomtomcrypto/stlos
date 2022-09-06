@@ -122,6 +122,8 @@ And then check you have the right slot using
     console.log(balance)
 ```
 
+You can also use a block explorer to try and find the key that matches your STLOS EVM contract's WTLOS balance but it is less reliable.
+
 ## EVM Contracts
 
 ### :: StakedTLOS
