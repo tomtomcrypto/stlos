@@ -39,7 +39,7 @@ _Gateway timeouts are normal, the contract should still get verified, check usin
 
 #### Transfer Ownership
 
-After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration of the `lockDuration` and `maxDeposits` variables via native multisig.
+After that you should transfer ownership of those contracts to the `prods.evm` linked EVM address for configuration via native multisig.
 
 #### Set configuration using a Native multisig
 
@@ -77,27 +77,52 @@ Staking can be configured using the following actions:
 
 #### Get the WTLOS index
 
-The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x)
+The WTLOS index can be found on __eosio.evm__'s accounts table using the WTLOS EVM address (without the 0x), you can use a block explorer or a JS script to retreive it.
 
 #### Get the storage key
 
-The storage key we are looking for is part of the `address => uint` balance mapping at position 2 of the WTLOS contract. We need to access the mapping value corresponding to the STLOS address in order to retreive its WTLOS balance.
+The storage key we are looking for is part of the `address => uint` balance mapping at position 3 of the WTLOS contract. We need to access the mapping value corresponding to the STLOS address in order to retreive its WTLOS balance.
 
 To compute that storage key, you can use the following snippet that uses the ethers library:
 
 ```
+const { BigNumber, ethers, utils } = require("ethers");
+const Web3 = require ('web3');
+
+const web3 = new Web3();
+
+(async function() {
     const provider = ethers.getDefaultProvider("https://testnet.telos.net/evm");
 
-    const wtlos = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS address on testnet
-    const stlos = "YOUR_STLOS_CONTRACT_ADDRESS"; // StakedTLOS address on testnet
+    const contract = "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9"; // WTLOS testnet address
 
-    // Get the stlos balance slot aka our storage key
-    const stlos_balance_slot = ethers.utils.keccak256(
-        ethers.utils.hexZeroPad("0x02", 32), // Our mapping position
-        ethers.utils.hexZeroPad(stlos, 32), // The stlos key
+    // Get the array slot
+    const slot = ethers.utils.keccak256(
+        ethers.utils.concat( [
+            ethers.utils.hexZeroPad("0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58", 32), // STLOS testnet address
+            ethers.utils.hexZeroPad("0x03", 32), // The position of the balance mapping inside WTLOS
+        ])
     );
-    console.log("Storage key:", stlos_balance_slot);
+
+    console.log("Storage key is: ", slot)
+})();
 ```
+
+And then check you have the right slot using
+
+
+``` 
+    let balance = 0;
+
+    try {
+        balance = await provider.getStorageAt(contract, slot);
+
+    } catch (e) {}
+
+    console.log(balance)
+```
+
+You can also use a block explorer to try and find the key that matches your STLOS EVM contract's WTLOS balance but it is less reliable.
 
 ## EVM Contracts
 
@@ -167,9 +192,9 @@ Withdraw assets to Telos Escrow contract
 
 #### Deployments
 
-__Testnet :__ 0x9EECD00cdBA81c691EC0Bfdc2485c36010885A58
+__Testnet :__ 0xa9991E4daA44922D00a78B6D986cDf628d46C4DD
 
-__Mainnet :__ TBD
+__Mainnet :__ 0x98BD57444603C66b736Fd0AeFCBE494c8Ee32C71
 
 ### :: TelosEscrow
 
@@ -222,6 +247,6 @@ Emitted on sucessfull call to `deposit(address depositor)`
 
 #### Deployments
 
-__Testnet :__ 0xbD4d1bD71A8354a1c416317aF6f6fCff319C9D97
+__Testnet :__ 0x7E9cF9fBc881652B05BB8F26298fFAB538163b6f
 
-__Mainnet :__ TBD
+__Mainnet :__ 0x7B74aAD58Ea0c76180967Aa0e342E1b7f389B48A
